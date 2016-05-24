@@ -1,0 +1,86 @@
+<!doctype html>
+<html>
+	<head>
+	<meta charset="utf-8">
+	<meta name="author" content="" />
+	<meta name="copyright" content="" />
+	<title>右键点击菜单</title>
+	<style>
+		*{ 
+			padding: 0; 
+			margin: 0; 
+		}
+		#wrap{
+			width: 100%;
+			height: 100vh;
+		}
+		#menu{
+			position: absolute;
+			visibility: hidden;
+		}
+	</style>
+</head>
+<body>
+	<div id="wrap">
+		<ul id="menu">
+			<Li>111</Li>
+			<Li>222</Li>
+			<Li>333</Li>
+			<Li>444</Li>
+		</ul>
+	</div>
+
+	<script>
+		// 跨浏览器事件处理程序
+		var EventUtil = {
+			addHandler : function(element,type,handler){
+				if(element.addEventListener){
+					element.addEventListener(type,handler,false);
+				}
+				else if(element.attachEvent){
+					element.attachEvent("on" + type,handler);
+				}
+			},
+			getEvent : function(event){
+				return event ? event : window.event;
+			},
+			getTarget : function(event){
+				return event.target || event.srcElement;
+			},
+			preventDefault : function(event){
+				event.preventDefault();
+			},
+			stopPropagation : function(event){
+				event.stopPropagation();
+			},
+			removeHandler : function(element,type,handler){
+				if(element.removeEventListener){
+					element.removeEventListener(type,handler,false);
+				}
+				else if(element.detachEvent){
+					element.detachEvent("on" + type,handler);
+				}
+			}
+		}
+
+		EventUtil.addHandler(window,"load",function(event){
+			var wrap = document.getElementById("wrap");
+			EventUtil.addHandler(wrap,"contextmenu",function(event){
+				event = EventUtil.getEvent(event);
+				EventUtil.preventDefault(event);
+				console.log('右键');
+				var menu = document.getElementById("menu");
+				menu.style.left = event.clientX + "px";
+				menu.style.top = event.clientY + "px";
+				menu.style.visibility = "visible";
+			});
+
+			EventUtil.addHandler(document,"click",function(event){
+				document.getElementById("menu").style.visibility = "hidden";
+				console.log('test');
+			});
+		});
+
+	</script>
+</body>
+</html>
